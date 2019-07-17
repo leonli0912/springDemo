@@ -13,6 +13,7 @@ public class PkClass implements Serializable {
     public int getReportYear() {
         return reportYear;
     }
+    public PkClass(){}
     public PkClass(String stockId, int reportYear) {
         this.stockId = stockId;
         this.reportYear = reportYear;

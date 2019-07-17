@@ -16,7 +16,7 @@ public class StockDividend {
     private int reportYear;
     private Date registDate;
     private Date dividendDate;
-
+    public StockDividend(){}
     /*public StockDividend(String id,int year){
         this.stockId = id;
         this.reportYear = year;
