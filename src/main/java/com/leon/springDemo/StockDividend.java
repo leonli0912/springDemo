@@ -1,25 +1,33 @@
 package com.leon.springDemo;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import java.util.Date;
-
+import javax.persistence.Column;
+@Entity
+@IdClass(PkClass.class)
 public class StockDividend {
+    @Id
+    @Column(columnDefinition="VARCHAR(8)")
     private String stockId;
     private String stockName;
+    @Id
     private int reportYear;
     private Date registDate;
     private Date dividendDate;
 
-    public StockDividend(String id,int year){
+    /*public StockDividend(String id,int year){
         this.stockId = id;
         this.reportYear = year;
-    }
+    }*/
 
-    /*public void setStockId(String stockId) {
+    public void setStockId(String stockId) {
         this.stockId = stockId;
     }
     public void setReportYear(int reportYear) {
         this.reportYear = reportYear;
-    }*/
+    }
 
     public void setStockName(String stockName) {
         this.stockName = stockName;
