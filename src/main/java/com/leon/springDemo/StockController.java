@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class StockController {
     @Autowired
     private StockDividendRepository stockDivRep;
+    @Autowired
+    private MyProxyRepository proxyRepository;
 
     @RequestMapping("/stock")
     public Stock stock(@RequestParam(value = "id", defaultValue = "sz00001") String id) {
@@ -56,6 +59,12 @@ public class StockController {
 
         dividends.add(d1);
         return dividends;
+    }
+
+    @GetMapping(path = "/addProxy")
+    public @ResponseBody
+    String addProxy() {
+        return "inited";
     }
 
 }
