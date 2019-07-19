@@ -1,4 +1,4 @@
-package com.leon.springDemo;
+package com.leon.springDemo.Entity;
 
 import java.io.Serializable;
 

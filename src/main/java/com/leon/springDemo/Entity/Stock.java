@@ -1,4 +1,4 @@
-package com.leon.springDemo;
+package com.leon.springDemo.Entity;
 
 public class Stock {
     private final String id;
@@ -8,6 +8,10 @@ public class Stock {
         this.id = sid;
         this.name = null;
         this.lastestPrice =0;
+    }
+
+    public String getId() {
+        return id;
     }
     public String getName(){
         return this.name;

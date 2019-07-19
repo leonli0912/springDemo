@@ -1,10 +1,13 @@
-package com.leon.springDemo;
+package com.leon.springDemo.Controller;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+import com.leon.springDemo.Entity.Stock;
+import com.leon.springDemo.Entity.StockDividend;
+import com.leon.springDemo.Repository.MyProxyRepository;
+import com.leon.springDemo.Repository.StockDividendRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,7 +30,7 @@ public class StockController {
         return new StockDividend();
     }
 
-    @GetMapping(path = "/add")
+    @GetMapping(path = "/addDividend")
     public @ResponseBody
     String addStockDividend() {
         StockDividend sd = new StockDividend();
@@ -64,6 +67,7 @@ public class StockController {
     @GetMapping(path = "/addProxy")
     public @ResponseBody
     String addProxy() {
+
         return "inited";
     }
 
