@@ -10,10 +10,12 @@ import java.util.ArrayList;
 
 public class ProxyPool {
     private ArrayList<MyProxy> proxies;
+
     public ProxyPool(){
         proxies = new ArrayList<MyProxy>();
         prepareProxy();
     }
+
     private void prepareProxy(){
         int page = 1;
 
@@ -28,6 +30,7 @@ public class ProxyPool {
             page++;
         }
     }
+
     private void parseHtml(String htmlText) {
         Document document = Jsoup.parse(htmlText);
         Elements allElements = document.select("#ip_list > tbody>tr") ;
@@ -39,6 +42,7 @@ public class ProxyPool {
             System.out.println("proxy pool add "+ element.child(1).text()+':'+element.child(2).text());
         }
     }
+
     public ArrayList<MyProxy> getProxies(){
         return proxies;
     }

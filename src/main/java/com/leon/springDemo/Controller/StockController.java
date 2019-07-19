@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.leon.springDemo.Entity.MyProxy;
+import com.leon.springDemo.Entity.ProxyPkClass;
 import com.leon.springDemo.Entity.Stock;
 import com.leon.springDemo.Entity.StockDividend;
 import com.leon.springDemo.Repository.MyProxyRepository;
 import com.leon.springDemo.Repository.StockDividendRepository;
+import com.leon.springDemo.Util.ProxyPool;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -69,6 +72,16 @@ public class StockController {
     String addProxy() {
 
         return "inited";
+    }
+
+    @RequestMapping("/proxies")
+    public List<MyProxy> getProxies(){
+        ProxyPool pool = new ProxyPool();
+        List<MyProxy> proxies = pool.getProxies();
+        proxies.forEach(p->{
+            proxyRepository.save(p);
+        });
+        return pool.getProxies();
     }
 
 }

@@ -39,6 +39,8 @@ public class MyProxy {
         return active;
     }
 
+    public MyProxy(){}
+
     public MyProxy(String host, String port){
         proxyHost=host;
         try {
