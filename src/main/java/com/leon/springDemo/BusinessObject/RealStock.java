@@ -1,5 +1,6 @@
 package com.leon.springDemo.BusinessObject;
 
+import com.leon.springDemo.Entity.StockDividend;
 import com.leon.springDemo.Util.DBConfiguration;
 import com.leon.springDemo.Util.MySqlHelper;
 import com.leon.springDemo.Util.UrlHelper;
@@ -7,6 +8,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RealStock {
     private UrlHelper urlHelper;
@@ -42,7 +46,7 @@ public class RealStock {
         return result;
     }
 
-    public String[] getHistoryDividend(String stockCode) {
+    public String[] getHistoryDividendString(String stockCode) {
         String[] result;
         String rawHtml = "";
         try {
@@ -54,6 +58,29 @@ public class RealStock {
         }
         result = ParseHtml(rawHtml);
         return result;
+    }
+    public List<StockDividend> getHistoryDividend(String[] strings){
+        List<StockDividend> sds = new ArrayList<StockDividend>();
+        if (strings.length == 0){
+            return sds;
+        }
+        for (int i=0;i<strings.length;i++){
+            if (strings[i]!=null){
+                StockDividend sd = new StockDividend();
+                //2018年报：10派1.45元， 分红日 2019年06月26日 ，该批次分红当天的股息率 1.08% 。
+                String[] substring1 = strings[i].trim().split(':');
+                //get year,':' 2018年报
+                int ryear = Integer.parseInt(substring1[0].substring(0,3));
+                sd.setReportYear(ryear);
+                //get dividend,dividend date,ratio string:',' 10派1.45元，分红日 2019年06月26日，该批次分红当天的股息率 1.08%
+                String[] substring2 = substring[1].split(',');
+                //
+
+                    String sqlStatemement = sqlSharedStateMement + divId + "," + "'"+dividends[i].trim() +"'"+ ")";
+                    mysql.execute(sqlStatemement);
+                }
+            }
+        }
     }
 
     public void updateHistoryDividend(String stockCode,String[] dividends)throws java.sql.SQLException{

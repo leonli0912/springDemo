@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.leon.springDemo.BusinessObject.RealStock;
+import com.leon.springDemo.BusinessObject.StockListReader;
 import com.leon.springDemo.Entity.MyProxy;
 import com.leon.springDemo.Entity.ProxyPkClass;
 import com.leon.springDemo.Entity.Stock;
@@ -20,6 +22,7 @@ public class StockController {
     private StockDividendRepository stockDivRep;
     @Autowired
     private MyProxyRepository proxyRepository;
+    private RealStock realStock;
 
     @RequestMapping("/stock")
     public Stock stock(@RequestParam(value = "id", defaultValue = "sz00001") String id) {
@@ -36,6 +39,18 @@ public class StockController {
     @GetMapping(path = "/addDividend")
     public @ResponseBody
     String addStockDividend() {
+        realStock = new RealStock();
+        String root = realStock.getClass().getResource("/").getPath();
+        ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
+        for(int i=0;i<stockCodes.size();i++){
+            String stockCode = stockCodes.get(i).toString();
+            System.out.println("number:..."+i+" stock code: "+stockCode);
+            try{
+                realStock.getHistoryDividendString(stockCode);
+            }catch (Exception e){
+
+            }
+        }
         StockDividend sd = new StockDividend();
         sd.setStockId("test01");
         sd.setReportYear(2019);
