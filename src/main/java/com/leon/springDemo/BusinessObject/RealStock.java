@@ -69,7 +69,7 @@ public class RealStock {
         if (strings.length == 0) {
             return sds;
         }
-        for (int i = 0; i < strings.length-1; i++) {
+        for (int i = 0; i < strings.length; i++) {
             if (strings[i] != null) {
                 StockDividend sd = new StockDividend();
                 sd.setStockId(stockCode);
@@ -97,7 +97,7 @@ public class RealStock {
         return sds;
     }
 
-    public void updateHistoryDividend(String stockCode, String[] dividends) throws java.sql.SQLException {
+    /*public void updateHistoryDividend(String stockCode, String[] dividends) throws java.sql.SQLException {
         final String sqlSharedStateMement = "insert into myschema.stockdividend(id,dividendId,dividendDetail)" +
                 "value('" + stockCode + "',";
         final String querySql = "select * from myschema.stockdividend where id ='" + stockCode +
@@ -117,7 +117,7 @@ public class RealStock {
             }
         }
         destroySqlHelper();
-    }
+    }*/
 
     private void destroySqlHelper() {
         mysql.destory();
@@ -152,6 +152,5 @@ public class RealStock {
         System.out.print("getStockHistory:" + stockCode + "\n");
         return response;
     }
-
 
 }
