@@ -43,7 +43,7 @@ public class StockController {
         String successMsg = "";
         realStock = new RealStock();
         String root = realStock.getClass().getResource("/").getPath();
-        ArrayList stockCodes = StockListReader.ReadFile(root+"Resource/stockList.txt");
+        ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
         for(int i=0;i<stockCodes.size();i++){//stockCodes.size()
             String stockCode = stockCodes.get(i).toString();//stockCodes.get(i).toString();
             System.out.println("number:..."+i+" stock code: "+stockCode);
