@@ -39,24 +39,23 @@ public class StockController {
     @GetMapping(path = "/addDividend")
     public @ResponseBody
     String addStockDividend() {
+        List<StockDividend> sds = new ArrayList<StockDividend>();
+        String successMsg = "";
         realStock = new RealStock();
         String root = realStock.getClass().getResource("/").getPath();
-        ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
-        for(int i=0;i<stockCodes.size();i++){
-            String stockCode = stockCodes.get(i).toString();
+        //ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
+        for(int i=0;i<1;i++){//stockCodes.size()
+            String stockCode = "sz000001";//stockCodes.get(i).toString();
             System.out.println("number:..."+i+" stock code: "+stockCode);
             try{
-                realStock.getHistoryDividendString(stockCode);
+                sds = realStock.getHistoryDividend(stockCode,realStock.getHistoryDividendString(stockCode)) ;
             }catch (Exception e){
-
+                e.printStackTrace();
             }
+            sds.forEach(d->stockDivRep.save(d));
+            successMsg = successMsg + stockCode + "saved !\n";
         }
-        StockDividend sd = new StockDividend();
-        sd.setStockId("test01");
-        sd.setReportYear(2019);
-        sd.setStockName("for testing");
-        stockDivRep.save(sd);
-        return "saved!";
+        return successMsg;
     }
 
     @GetMapping(path = "/all")

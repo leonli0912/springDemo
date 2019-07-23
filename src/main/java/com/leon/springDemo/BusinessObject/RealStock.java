@@ -9,19 +9,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RealStock {
     private UrlHelper urlHelper;
-    private MySqlHelper mysql ;
+    private MySqlHelper mysql;
+
     public RealStock() {
-        urlHelper = new UrlHelper("GBK",true);
+        urlHelper = new UrlHelper("GBK", true);
 
     }
-    private void initSqlHelper(){
-            mysql = new MySqlHelper(DBConfiguration.url, DBConfiguration.userName, DBConfiguration.password);
+
+    private void initSqlHelper() {
+        mysql = new MySqlHelper(DBConfiguration.url, DBConfiguration.userName, DBConfiguration.password);
     }
+
     public String getStockHistory(String stockCode) throws Exception {
         return getStockHistory(stockCode, 30);
     }
@@ -59,45 +63,55 @@ public class RealStock {
         result = ParseHtml(rawHtml);
         return result;
     }
-    public List<StockDividend> getHistoryDividend(String[] strings){
+
+    public List<StockDividend> getHistoryDividend(String stockCode, String[] strings) {
         List<StockDividend> sds = new ArrayList<StockDividend>();
-        if (strings.length == 0){
+        if (strings.length == 0) {
             return sds;
         }
-        for (int i=0;i<strings.length;i++){
-            if (strings[i]!=null){
+        for (int i = 0; i < strings.length-1; i++) {
+            if (strings[i] != null) {
                 StockDividend sd = new StockDividend();
+                sd.setStockId(stockCode);
                 //2018年报：10派1.45元， 分红日 2019年06月26日 ，该批次分红当天的股息率 1.08% 。
-                String[] substring1 = strings[i].trim().split(':');
+                String[] substring1 = strings[i].trim().split("：");
                 //get year,':' 2018年报
-                int ryear = Integer.parseInt(substring1[0].substring(0,3));
+                int ryear = Integer.parseInt(substring1[0].substring(0, 4));
                 sd.setReportYear(ryear);
                 //get dividend,dividend date,ratio string:',' 10派1.45元，分红日 2019年06月26日，该批次分红当天的股息率 1.08%
-                String[] substring2 = substring[1].split(',');
-                //
-
-                    String sqlStatemement = sqlSharedStateMement + divId + "," + "'"+dividends[i].trim() +"'"+ ")";
-                    mysql.execute(sqlStatemement);
+                String[] substring2 = substring1[1].split("，");
+                sd.setDivdendContent(substring2[0].trim());
+                try {
+                    sd.setDividendDate(new SimpleDateFormat("yyyy年MM月dd日").parse(substring2[1].substring(5, 16).trim()));
+                } catch (java.text.ParseException e) {
+                    //
                 }
+                if (substring2.length>2){
+                    sd.setRatio(Double.valueOf(substring2[2].split(" ")[1].split("%")[0]));
+                }
+                sds.add(sd);
+                //    String sqlStatemement = sqlSharedStateMement + divId + "," + "'"+dividends[i].trim() +"'"+ ")";
+                //    mysql.execute(sqlStatemement);
             }
         }
+        return sds;
     }
 
-    public void updateHistoryDividend(String stockCode,String[] dividends)throws java.sql.SQLException{
+    public void updateHistoryDividend(String stockCode, String[] dividends) throws java.sql.SQLException {
         final String sqlSharedStateMement = "insert into myschema.stockdividend(id,dividendId,dividendDetail)" +
                 "value('" + stockCode + "',";
-        final String querySql = "select * from myschema.stockdividend where id ='"+stockCode +
+        final String querySql = "select * from myschema.stockdividend where id ='" + stockCode +
                 "' and dividendId='";
         initSqlHelper();
         int divId = 0;
-        if (dividends == null){
+        if (dividends == null) {
             return;
         }
-        for (int i=0;i<dividends.length;i++){
-            if (dividends[i]!=null){
-                if (mysql.executeQuery(querySql+divId+"'")==0){
-                String sqlStatemement = sqlSharedStateMement + divId + "," + "'"+dividends[i].trim() +"'"+ ")";
-                mysql.execute(sqlStatemement);
+        for (int i = 0; i < dividends.length; i++) {
+            if (dividends[i] != null) {
+                if (mysql.executeQuery(querySql + divId + "'") == 0) {
+                    String sqlStatemement = sqlSharedStateMement + divId + "," + "'" + dividends[i].trim() + "'" + ")";
+                    mysql.execute(sqlStatemement);
                 }
                 divId++;
             }
@@ -105,20 +119,21 @@ public class RealStock {
         destroySqlHelper();
     }
 
-    private void destroySqlHelper(){
+    private void destroySqlHelper() {
         mysql.destory();
     }
+
     private String[] ParseHtml(String htmlText) {
         String[] result = new String[100];
         Document document = Jsoup.parse(htmlText);
         Elements allElements = document.getElementsByClass("mt-1");
-        for (Element element :allElements){
-            if (element.tag().toString().equals("ul")){
-                result =ParseText(element.text());
+        for (Element element : allElements) {
+            if (element.tag().toString().equals("ul")) {
+                result = ParseText(element.text());
             }
         }
         return result;
-}
+    }
 
     private String[] ParseText(String longText) {
         if (longText.equals("")) {

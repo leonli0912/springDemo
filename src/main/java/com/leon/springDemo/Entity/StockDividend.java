@@ -16,6 +16,8 @@ public class StockDividend {
     private int reportYear;
     private Date registDate;
     private Date dividendDate;
+    private String divdendContent;
+    private double ratio;
     public StockDividend(){}
     /*public StockDividend(String id,int year){
         this.stockId = id;
@@ -25,6 +27,7 @@ public class StockDividend {
     public void setStockId(String stockId) {
         this.stockId = stockId;
     }
+
     public void setReportYear(int reportYear) {
         this.reportYear = reportYear;
     }
@@ -41,6 +44,14 @@ public class StockDividend {
         this.dividendDate = dividendDate;
     }
 
+    public void setDivdendContent(String divdendContent) {
+        this.divdendContent = divdendContent;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+    }
+
     public String getStockId(){
         return this.stockId;
     }
@@ -55,5 +66,12 @@ public class StockDividend {
     }
     public Date getDividendDate(){
         return this.dividendDate;
+    }
+    public String getDivdendContent() {
+        return divdendContent;
+    }
+
+    public double getRatio() {
+        return ratio;
     }
 }

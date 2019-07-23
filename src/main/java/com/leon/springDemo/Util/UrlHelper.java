@@ -150,8 +150,8 @@ public class UrlHelper {
     private void switchProxy() {
         int index = (int) (Math.random() * proxies.size());
         currentProxy = proxies.get(index);
-        proxyHost = currentProxy.getProxyHost();
-        proxyPort = currentProxy.getProxyPort();
+        proxyHost = "proxy.sin.sap.corp";//currentProxy.getProxyHost();
+        proxyPort = 8080;//currentProxy.getProxyPort();
         requestCounter = 0;
         System.out.println("switch proxy to :" + proxyHost + "," + proxyPort + ";"+"left:"+proxies.size());
     }
