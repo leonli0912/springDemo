@@ -30,10 +30,9 @@ public class StockController {
         return new Stock(id);
     }
 
-    @RequestMapping("/stockDividend")
-    public StockDividend dividendHistory(@RequestParam(value = "id", defaultValue = "sz00001") String id,
-                                         @RequestParam(value = "year", defaultValue = "2018") int year) {
-        return new StockDividend();
+    @RequestMapping("/lastStockDividend")
+    public StockDividend getLastDividend() {
+        return stockDivRep.getLastDividend() ;
     }
 
     @GetMapping(path = "/addDividend")
@@ -44,7 +43,9 @@ public class StockController {
         realStock = new RealStock();
         String root = realStock.getClass().getResource("/").getPath();
         ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
-        for(int i=0;i<stockCodes.size();i++){//stockCodes.size()
+        int lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
+        //stockDivRep.getLastDividend().getStockId()
+        for(int i=lastIndex+1;i<stockCodes.size();i++){//stockCodes.size()
             String stockCode = stockCodes.get(i).toString();//stockCodes.get(i).toString();
             System.out.println("number:..."+i+" stock code: "+stockCode);
             try{

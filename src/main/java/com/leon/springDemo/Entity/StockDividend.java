@@ -74,4 +74,5 @@ public class StockDividend {
     public double getRatio() {
         return ratio;
     }
+
 }
