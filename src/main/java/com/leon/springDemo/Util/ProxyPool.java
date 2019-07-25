@@ -21,7 +21,7 @@ public class ProxyPool {
 
         while(page<=1){
             try {
-                String proxyHtml = new UrlHelper("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
+                String proxyHtml = new HttpHelperUsingProxy("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
                 parseHtml(proxyHtml);
             }catch (Exception e){
                 e.printStackTrace();

@@ -1,9 +1,7 @@
 package com.leon.springDemo.BusinessObject;
 
 import com.leon.springDemo.Entity.StockDividend;
-import com.leon.springDemo.Util.DBConfiguration;
-import com.leon.springDemo.Util.MySqlHelper;
-import com.leon.springDemo.Util.UrlHelper;
+import com.leon.springDemo.Util.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,12 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RealStock {
-    private UrlHelper urlHelper;
+    private HttpHelper urlHelper;
     private MySqlHelper mysql;
 
     public RealStock() {
-        urlHelper = new UrlHelper("GBK", true);
-
+        urlHelper = (HttpHelper) new HttpHelperUsingProxy("GBK", true);
     }
 
     private void initSqlHelper() {

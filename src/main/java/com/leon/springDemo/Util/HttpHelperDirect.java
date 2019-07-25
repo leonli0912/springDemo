@@ -1,30 +1,16 @@
 package com.leon.springDemo.Util;
 
-import com.leon.springDemo.Entity.MyProxy;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
-import java.util.ArrayList;
 
-
-public class UrlHelper {
+public class HttpHelperDirect implements HttpHelper {
     private String charset;
-    private String proxyHost;
-    private Integer proxyPort;
-    private MyProxy currentProxy;
-    private boolean isRollingIp;
-    private static Integer requestCounter;
-    private ArrayList<MyProxy> proxies;
 
     {
         charset = "GBK";
-        proxyPort = 8080;
-        proxyHost = null;//"proxy.sin.sap.corp";
-        isRollingIp = false;
-        requestCounter = 0;
     }
 
     /**
@@ -32,31 +18,8 @@ public class UrlHelper {
      *
      * @param scharset
      */
-    public UrlHelper(String scharset) {
+    public HttpHelperDirect(String scharset) {
         charset = scharset;
-    }
-
-    /**
-     * overload constructor with rolling ip option
-     *
-     * @param scharset
-     * @param bRollingIp
-     */
-    public UrlHelper(String scharset, Boolean bRollingIp) {
-        charset = scharset;
-        isRollingIp = bRollingIp;
-        if (bRollingIp) {
-            try {
-                initProxyPool();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int index = (int) (Math.random() * proxies.size());
-            currentProxy = proxies.get(index);
-            proxyHost = currentProxy.getProxyHost();
-            proxyPort = currentProxy.getProxyPort();
-            System.out.print("set proxy to :" + proxyHost + "," + proxyPort);
-        }
     }
 
     public void setCharset(String scharset) {
@@ -84,8 +47,6 @@ public class UrlHelper {
         try {
             if (httpURLConnection.getResponseCode() >= 300) {
                 System.out.println("HTTP Request is not success, Response code is " + httpURLConnection.getResponseCode());
-                proxies.remove(currentProxy);
-                switchProxy();
                 resultBuffer = new StringBuffer(doGet(url));
             }
 
@@ -101,14 +62,11 @@ public class UrlHelper {
             while ((tempLine = reader.readLine()) != null) {
                 resultBuffer.append(tempLine);
             }
-        }catch (javax.net.ssl.SSLHandshakeException e){
+        } catch (javax.net.ssl.SSLHandshakeException e) {
             System.out.println("SSH handshake error");
 
-        }
-        catch (ConnectException e) {
+        } catch (ConnectException e) {
             System.out.println("connection time out");
-            proxies.remove(currentProxy);
-            switchProxy();
             resultBuffer = new StringBuffer(doGet(url));
         } finally {
             if (reader != null) {
@@ -127,32 +85,9 @@ public class UrlHelper {
     private URLConnection openConnection(URL localURL) throws IOException {
         URLConnection connection;
 
-        if (isRollingIp && requestCounter >= 10) {
-            switchProxy();
+        connection = localURL.openConnection();
 
-        }
-        if (proxyHost != null && proxyPort != null) {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
-            connection = localURL.openConnection(proxy);
-            requestCounter++;
-        } else {
-            connection = localURL.openConnection();
-        }
-        System.out.println("do get...,count of request is " + requestCounter);
         return connection;
     }
 
-    private void initProxyPool() {
-        ProxyPool pp = new ProxyPool();
-        proxies = pp.getProxies();
-    }
-
-    private void switchProxy() {
-        int index = (int) (Math.random() * proxies.size());
-        currentProxy = proxies.get(index);
-        proxyHost = currentProxy.getProxyHost();
-        proxyPort = currentProxy.getProxyPort();
-        requestCounter = 0;
-        System.out.println("switch proxy to :" + proxyHost + "," + proxyPort + ";"+"left:"+proxies.size());
-    }
 }
