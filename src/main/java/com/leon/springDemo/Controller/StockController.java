@@ -24,12 +24,6 @@ public class StockController {
     private MyProxyRepository proxyRepository;
     private RealStock realStock;
 
-    @RequestMapping("/stock")
-    public Stock stock(@RequestParam(value = "id", defaultValue = "sz00001") String id) {
-
-        return new Stock(id);
-    }
-
     @RequestMapping("/lastStockDividend")
     public StockDividend getLastDividend() {
         return stockDivRep.getLastDividend() ;
@@ -59,27 +53,11 @@ public class StockController {
         return successMsg;
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "/allDividend")
     public @ResponseBody
     Iterable<StockDividend> getAllDividends() {
         // This returns a JSON or XML with the users
         return stockDivRep.findAll();
-    }
-
-    @RequestMapping("/dividends")
-    public List<StockDividend> getDividends(int year) {
-        List<StockDividend> dividends = new ArrayList<>();
-        StockDividend d1 = new StockDividend();
-        d1.setStockName("stockname1");
-        d1.setDividendDate(new Date());
-
-        dividends.add(d1);
-        StockDividend d2 = new StockDividend();
-        d1.setStockName("stockname2");
-        d1.setDividendDate(new Date());
-
-        dividends.add(d1);
-        return dividends;
     }
 
     @GetMapping(path = "/addProxy")
