@@ -16,7 +16,7 @@ public class RealStock {
     private MySqlHelper mysql;
 
     public RealStock() {
-        urlHelper = (HttpHelper) new HttpHelperUsingProxy("GBK", true);
+        urlHelper = new HttpHelperUsingProxy("GBK", true);
     }
 
     private void initSqlHelper() {

@@ -10,7 +10,7 @@ import java.net.*;
 import java.util.ArrayList;
 
 
-public class HttpHelperUsingProxy {
+public class HttpHelperUsingProxy implements HttpHelper{
     private String charset;
     private String proxyHost;
     private Integer proxyPort;
