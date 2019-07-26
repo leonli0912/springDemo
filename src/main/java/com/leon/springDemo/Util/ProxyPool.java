@@ -1,6 +1,7 @@
 package com.leon.springDemo.Util;
 
 import com.leon.springDemo.Entity.MyProxy;
+import com.leon.springDemo.Repository.MyProxyRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 public class ProxyPool {
     private ArrayList<MyProxy> proxies;
+    private MyProxyRepository proxyRepository;
 
     public ProxyPool(){
         proxies = new ArrayList<MyProxy>();
@@ -21,7 +23,7 @@ public class ProxyPool {
 
         while(page<=1){
             try {
-                String proxyHtml = new HttpHelperUsingProxy("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
+                String proxyHtml = new HttpHelperDirect("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
                 parseHtml(proxyHtml);
             }catch (Exception e){
                 e.printStackTrace();
@@ -45,5 +47,23 @@ public class ProxyPool {
 
     public ArrayList<MyProxy> getProxies(){
         return proxies;
+    }
+
+    public void save(MyProxy proxy) {
+        proxyRepository.save(proxy);
+    }
+    public void remove(MyProxy proxy){
+        if (proxies.contains(proxy)){
+            proxies.remove(proxy);
+        }
+    }
+
+    public MyProxy getRandom(){
+        int index = (int) (Math.random() * proxies.size());
+        return proxies.get(index);
+    }
+
+    public int getSize(){
+        return proxies.size();
     }
 }

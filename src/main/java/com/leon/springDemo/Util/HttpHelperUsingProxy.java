@@ -12,18 +12,15 @@ import java.util.ArrayList;
 
 public class HttpHelperUsingProxy implements HttpHelper{
     private String charset;
-    private String proxyHost;
-    private Integer proxyPort;
     private MyProxy currentProxy;
+    private ProxyPool proxies;
     private boolean isRollingIp;
     private static Integer requestCounter;
-    private ArrayList<MyProxy> proxies;
 
     {
         charset = "GBK";
-        proxyPort = 8080;
-        proxyHost = null;//"proxy.sin.sap.corp";
         isRollingIp = false;
+        currentProxy= new MyProxy();
         requestCounter = 0;
     }
 
@@ -47,15 +44,12 @@ public class HttpHelperUsingProxy implements HttpHelper{
         isRollingIp = bRollingIp;
         if (bRollingIp) {
             try {
-                initProxyPool();
+                proxies = new ProxyPool();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            int index = (int) (Math.random() * proxies.size());
-            currentProxy = proxies.get(index);
-            proxyHost = currentProxy.getProxyHost();
-            proxyPort = currentProxy.getProxyPort();
-            System.out.print("set proxy to :" + proxyHost + "," + proxyPort);
+            currentProxy = proxies.getRandom();
+            System.out.print("set proxy to :" + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort());
         }
     }
 
@@ -120,6 +114,8 @@ public class HttpHelperUsingProxy implements HttpHelper{
             if (inputStream != null) {
                 inputStream.close();
             }
+            currentProxy.setActive(true);
+            proxies.save(currentProxy);
         }
         return resultBuffer.toString();
     }
@@ -129,10 +125,9 @@ public class HttpHelperUsingProxy implements HttpHelper{
 
         if (isRollingIp && requestCounter >= 10) {
             switchProxy();
-
         }
-        if (proxyHost != null && proxyPort != null) {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+        if (currentProxy != null) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(currentProxy.getProxyHost(), currentProxy.getProxyPort()));
             connection = localURL.openConnection(proxy);
             requestCounter++;
         } else {
@@ -142,17 +137,9 @@ public class HttpHelperUsingProxy implements HttpHelper{
         return connection;
     }
 
-    private void initProxyPool() {
-        ProxyPool pp = new ProxyPool();
-        proxies = pp.getProxies();
-    }
-
     private void switchProxy() {
-        int index = (int) (Math.random() * proxies.size());
-        currentProxy = proxies.get(index);
-        proxyHost = currentProxy.getProxyHost();
-        proxyPort = currentProxy.getProxyPort();
+        currentProxy = proxies.getRandom();
         requestCounter = 0;
-        System.out.println("switch proxy to :" + proxyHost + "," + proxyPort + ";"+"left:"+proxies.size());
+        System.out.println("switch proxy to :" + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort() + ";"+"left:"+proxies.getSize());
     }
 }
