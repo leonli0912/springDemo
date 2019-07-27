@@ -12,11 +12,6 @@ public class SpringDemoApplication {
 	public static void main(String[] args) {
 		System.out.println("start app...");
 		ApplicationContext context =SpringApplication.run(SpringDemoApplication.class, args);
-		String[] beanNames =  context.getBeanDefinitionNames();
-		System.out.println("beanNames个数："+beanNames.length);
-		for(String bn:beanNames){
-			System.out.println(bn);
-		}
 		SpringContextUtil.setApplicationContext(context);
 	}
 
