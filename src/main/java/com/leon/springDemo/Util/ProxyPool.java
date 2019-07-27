@@ -14,6 +14,7 @@ public class ProxyPool {
     private MyProxyRepository proxyRepository;
 
     public ProxyPool(){
+        proxyRepository=(MyProxyRepository)SpringContextUtil.getBean("myProxyRepository");
         proxies = new ArrayList<MyProxy>();
         prepareProxy();
     }
