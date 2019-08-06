@@ -63,7 +63,8 @@ public class HttpHelperUsingProxy implements HttpHelper{
         URLConnection connection = this.openConnection(localURL);
         //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
         //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36");
+                //"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
         HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
 
         //httpURLConnection.setRequestProperty("Accept-Charset", charset);
@@ -115,8 +116,7 @@ public class HttpHelperUsingProxy implements HttpHelper{
             if (inputStream != null) {
                 inputStream.close();
             }
-            currentProxy.setActive(true);
-            proxies.save(currentProxy);
+
         }
         return resultBuffer.toString();
     }
@@ -142,5 +142,17 @@ public class HttpHelperUsingProxy implements HttpHelper{
         currentProxy = proxies.getRandom();
         requestCounter = 0;
         System.out.println("switch proxy to :" + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort() + ";"+"left:"+proxies.getSize());
+    }
+    public void saveProxy(){
+        System.out.println("save current proxy: "+currentProxy.getProxyHost()+","+currentProxy.getProxyPort());
+        currentProxy.setActive(true);
+        proxies.save(currentProxy);
+    }
+    public void setProxy(String host,Integer port){
+        if (null != currentProxy){
+            System.out.println("set proxy to :"+host+","+port);
+            currentProxy.setProxyHost(host);
+            currentProxy.setProxyPort(port);
+        }
     }
 }

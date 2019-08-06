@@ -12,6 +12,8 @@ import com.leon.springDemo.Entity.Stock;
 import com.leon.springDemo.Entity.StockDividend;
 import com.leon.springDemo.Repository.MyProxyRepository;
 import com.leon.springDemo.Repository.StockDividendRepository;
+import com.leon.springDemo.Util.HttpHelper;
+import com.leon.springDemo.Util.HttpHelperUsingProxy;
 import com.leon.springDemo.Util.ProxyPool;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,21 @@ public class StockController {
             proxyRepository.save(p);
         });
         return pool.getProxies();
+    }
+
+    @RequestMapping("/testproxy")
+    public String testProxy(){
+        String res = "";
+        HttpHelper hp = new HttpHelperUsingProxy("GBK", true);
+        ((HttpHelperUsingProxy) hp).setProxy("112.85.166.241",9999);
+        try {
+            res = hp.doGet("https://www.baidu.com/");
+            ((HttpHelperUsingProxy) hp).saveProxy();
+        } catch (java.lang.Exception e){
+            res = "get failed";
+        }
+        return  res;
+
     }
 
 }

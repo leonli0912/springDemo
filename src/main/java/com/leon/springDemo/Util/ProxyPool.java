@@ -53,6 +53,7 @@ public class ProxyPool {
     public void save(MyProxy proxy) {
         proxyRepository.save(proxy);
     }
+
     public void remove(MyProxy proxy){
         if (proxies.contains(proxy)){
             proxies.remove(proxy);
