@@ -2,6 +2,8 @@ package com.leon.springDemo.BusinessObject;
 
 import com.leon.springDemo.Entity.StockDividend;
 import com.leon.springDemo.Repository.StockDividendRepository;
+import com.leon.springDemo.Util.SpringContextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ public class ThreadRunner implements Runnable {
     private int maxIndex;
     private ArrayList stockCodes;
     private volatile RealStock realStock;
+    @Autowired
     private StockDividendRepository stockDivRep;
 
     private String threadName;
@@ -26,18 +29,23 @@ public class ThreadRunner implements Runnable {
 
     @Override
     public void run() {
+        stockDivRep = (StockDividendRepository)SpringContextUtil.getBean(StockDividendRepository.class);
         List<StockDividend> sds = new ArrayList<StockDividend>();
         String successMsg = "";
         //realStock = new RealStock();
         realStock = new RealStock();
 
-        while(lastIndex<maxIndex){
+        while (lastIndex < maxIndex) {
             stockCode = stockCodes.get(lastIndex).toString();
-            System.out.println("Thread: " + threadName+",stock:"+stockCode + ", " + lastIndex);
+            System.out.println("Thread: " + threadName + ",stock:" + stockCode + ", " + lastIndex);
 
             sds = realStock.getHistoryDividend(stockCode, realStock.getHistoryDividendString(stockCode));
-            if(sds != null){
-                sds.forEach(d -> stockDivRep.save(d));
+            if (sds != null) {
+                sds.forEach(d -> {
+                            System.out.println(d);
+                            stockDivRep.save(d);
+                        }
+                );
             }
             lastIndex++;
             successMsg = successMsg + stockCode + "saved !\n";
