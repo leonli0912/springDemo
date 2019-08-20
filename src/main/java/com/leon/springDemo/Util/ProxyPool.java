@@ -12,13 +12,15 @@ import java.util.ArrayList;
 public class ProxyPool {
     private ArrayList<MyProxy> proxies;
     private MyProxyRepository proxyRepository;
-
-    public ProxyPool(){
+    private static final ProxyPool instance = new ProxyPool();
+    private ProxyPool(){
         proxyRepository=(MyProxyRepository)SpringContextUtil.getBean("myProxyRepository");
         proxies = new ArrayList<MyProxy>();
         prepareProxy();
     }
-
+    public static ProxyPool getInstance(){
+        return instance;
+    }
     private void prepareProxy(){
         int page = 1;
 

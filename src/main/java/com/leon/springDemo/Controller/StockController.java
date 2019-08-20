@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.leon.springDemo.BusinessObject.RealStock;
 import com.leon.springDemo.BusinessObject.StockListReader;
+import com.leon.springDemo.BusinessObject.ThreadRunner;
 import com.leon.springDemo.Entity.MyProxy;
 import com.leon.springDemo.Entity.ProxyPkClass;
 import com.leon.springDemo.Entity.Stock;
@@ -34,7 +35,16 @@ public class StockController {
     @GetMapping(path = "/addDividend")
     public @ResponseBody
     String addStockDividend() {
-        List<StockDividend> sds = new ArrayList<StockDividend>();
+        String root = RealStock.class.getResource("/").getPath();
+        ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
+        int lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
+        ThreadRunner runner1 = new ThreadRunner("runner1",stockCodes.size(),lastIndex,stockCodes);
+        runner1.start();
+
+        ThreadRunner runner2 = new ThreadRunner("runner2",stockCodes.size(),lastIndex+1,stockCodes);
+        runner2.start();
+
+        /*List<StockDividend> sds = new ArrayList<StockDividend>();
         String successMsg = "";
         realStock = new RealStock();
         String root = realStock.getClass().getResource("/").getPath();
@@ -52,7 +62,8 @@ public class StockController {
             sds.forEach(d->stockDivRep.save(d));
             successMsg = successMsg + stockCode + "saved !\n";
         }
-        return successMsg;
+        return successMsg;*/
+        return "started";
     }
 
     @GetMapping(path = "/allDividend")
@@ -71,7 +82,7 @@ public class StockController {
 
     @RequestMapping("/proxies")
     public List<MyProxy> getProxies(){
-        ProxyPool pool = new ProxyPool();
+        ProxyPool pool = ProxyPool.getInstance();
         List<MyProxy> proxies = pool.getProxies();
         proxies.forEach(p->{
             proxyRepository.save(p);

@@ -63,11 +63,12 @@ public class RealStock {
 
     public List<StockDividend> getHistoryDividend(String stockCode, String[] strings) {
         List<StockDividend> sds = new ArrayList<StockDividend>();
-        if (strings.length == 0) {
+        if (strings == null ||strings.length == 0) {
             return sds;
         }
         for (int i = 0; i < strings.length; i++) {
             if (strings[i] != null) {
+                System.out.println(strings[i]);
                 StockDividend sd = new StockDividend();
                 sd.setStockId(stockCode);
                 //2018年报：10派1.45元， 分红日 2019年06月26日 ，该批次分红当天的股息率 1.08% 。
