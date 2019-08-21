@@ -24,7 +24,7 @@ public class ProxyPool {
     private void prepareProxy(){
         int page = 1;
 
-        while(page<=1){
+        while(page<=5){
             try {
                 String proxyHtml = new HttpHelperDirect("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
                 parseHtml(proxyHtml);

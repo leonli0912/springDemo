@@ -38,12 +38,34 @@ public class StockController {
         String root = RealStock.class.getResource("/").getPath();
         ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
         int lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
-        ThreadRunner runner1 = new ThreadRunner("runner1",stockCodes.size(),lastIndex,stockCodes);
+        int i = 0;
+        List<ThreadRunner> runners = new ArrayList<ThreadRunner>();
+        while (i<10){
+            runners.add(i, new ThreadRunner("runner" + i, stockCodes.size(), lastIndex+i, stockCodes));
+            runners.get(i).start();
+            i++;
+        }
+
+        /*ThreadRunner runner1 = new ThreadRunner("runner1",stockCodes.size(),lastIndex,stockCodes);
         runner1.start();
 
         ThreadRunner runner2 = new ThreadRunner("runner2",stockCodes.size(),lastIndex+1,stockCodes);
         runner2.start();
 
+        ThreadRunner runner3 = new ThreadRunner("runner3",stockCodes.size(),lastIndex+2,stockCodes);
+        runner3.start();
+
+        ThreadRunner runner4 = new ThreadRunner("runner4",stockCodes.size(),lastIndex+3,stockCodes);
+        runner4.start();
+
+        ThreadRunner runner5 = new ThreadRunner("runner5",stockCodes.size(),lastIndex+4,stockCodes);
+        runner5.start();
+
+        ThreadRunner runner6 = new ThreadRunner("runner6",stockCodes.size(),lastIndex+5,stockCodes);
+        runner6.start();
+
+        ThreadRunner runner7 = new ThreadRunner("runner7",stockCodes.size(),lastIndex+6,stockCodes);
+        runner7.start();*/
         /*List<StockDividend> sds = new ArrayList<StockDividend>();
         String successMsg = "";
         realStock = new RealStock();

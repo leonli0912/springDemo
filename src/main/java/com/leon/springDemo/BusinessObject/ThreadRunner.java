@@ -14,7 +14,7 @@ public class ThreadRunner implements Runnable {
     private ArrayList stockCodes;
     private volatile RealStock realStock;
     @Autowired
-    private StockDividendRepository stockDivRep;
+    private volatile StockDividendRepository stockDivRep;
 
     private String threadName;
     private Thread t;
@@ -46,7 +46,11 @@ public class ThreadRunner implements Runnable {
                             stockDivRep.save(d);
                         }
                 );
+            }else {
+
             }
+            lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
+            System.out.println("Thread: " + threadName + ",stock:" + stockCode + ", " + lastIndex+"saved!");
             lastIndex++;
             successMsg = successMsg + stockCode + "saved !\n";
         }

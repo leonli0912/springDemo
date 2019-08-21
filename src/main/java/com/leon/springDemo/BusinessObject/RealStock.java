@@ -54,7 +54,7 @@ public class RealStock {
             rawHtml = getHistoryDividendRaw(stockCode);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.print("Get History Dividend Failed");
+            System.out.println("Get History Dividend Failed");
             return null;
         }
         result = ParseHtml(rawHtml);
@@ -64,7 +64,7 @@ public class RealStock {
     public List<StockDividend> getHistoryDividend(String stockCode, String[] strings) {
         List<StockDividend> sds = new ArrayList<StockDividend>();
         if (strings == null ||strings.length == 0) {
-            return sds;
+            return null;
         }
         for (int i = 0; i < strings.length; i++) {
             if (strings[i] != null) {
