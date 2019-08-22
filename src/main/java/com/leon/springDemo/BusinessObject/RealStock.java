@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RealStock {
@@ -68,7 +69,7 @@ public class RealStock {
         }
         for (int i = 0; i < strings.length; i++) {
             if (strings[i] != null) {
-                //System.out.println(strings[i]);
+                System.out.println(strings[i]);
                 StockDividend sd = new StockDividend();
                 sd.setStockId(stockCode);
                 //2018年报：10派1.45元， 分红日 2019年06月26日 ，该批次分红当天的股息率 1.08% 。
@@ -79,9 +80,17 @@ public class RealStock {
                 //get dividend,dividend date,ratio string:',' 10派1.45元，分红日 2019年06月26日，该批次分红当天的股息率 1.08%
                 String[] substring2 = substring1[1].split("，");
                 sd.setDivdendContent(substring2[0].trim());
+                Date newDate;
                 try {
-                    sd.setDividendDate(new SimpleDateFormat("yyyy年MM月dd日").parse(substring2[1].substring(5, 16).trim()));
-                } catch (java.text.ParseException e) {
+                    newDate = new SimpleDateFormat("yyyy年MM月dd日").parse(substring2[1].substring(5, 16).trim());
+                    sd.setDividendDate(newDate);
+                } catch (java.lang.StringIndexOutOfBoundsException e){
+                    //暂无公告分红日
+                    try {
+                        sd.setDividendDate(new SimpleDateFormat("yyyy年MM月dd日").parse("2019年12月31日"));
+                    }catch (java.text.ParseException ee){}
+
+                }catch (java.text.ParseException e) {
                     //
                 }
                 if (substring2.length>2){

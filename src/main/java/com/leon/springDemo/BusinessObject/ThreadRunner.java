@@ -42,14 +42,13 @@ public class ThreadRunner implements Runnable {
             sds = realStock.getHistoryDividend(stockCode, realStock.getHistoryDividendString(stockCode));
             if (sds != null) {
                 sds.forEach(d -> {
-                            System.out.println(d);
+                            //System.out.println(d);
                             stockDivRep.save(d);
                         }
                 );
-            }else {
-
+                lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
             }
-            lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
+
             System.out.println("Thread: " + threadName + ",stock:" + stockCode + ", " + lastIndex+"saved!");
             lastIndex++;
             successMsg = successMsg + stockCode + "saved !\n";

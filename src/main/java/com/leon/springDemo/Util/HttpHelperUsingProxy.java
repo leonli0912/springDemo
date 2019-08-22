@@ -10,7 +10,7 @@ import java.net.*;
 import java.util.ArrayList;
 
 
-public class HttpHelperUsingProxy implements HttpHelper{
+public class HttpHelperUsingProxy implements HttpHelper {
     private String charset;
     private MyProxy currentProxy;
     private ProxyPool proxies;
@@ -20,7 +20,7 @@ public class HttpHelperUsingProxy implements HttpHelper{
     {
         charset = "GBK";
         isRollingIp = false;
-        currentProxy= new MyProxy();
+        currentProxy = new MyProxy();
         requestCounter = 0;
     }
 
@@ -64,7 +64,7 @@ public class HttpHelperUsingProxy implements HttpHelper{
         //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
         //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36");
-                //"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+        //"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
         HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
 
         //httpURLConnection.setRequestProperty("Accept-Charset", charset);
@@ -97,15 +97,22 @@ public class HttpHelperUsingProxy implements HttpHelper{
             while ((tempLine = reader.readLine()) != null) {
                 resultBuffer.append(tempLine);
             }
-        }catch (javax.net.ssl.SSLHandshakeException e){
+        } catch (javax.net.ssl.SSLHandshakeException e) {
             System.out.println("SSH handshake error");
 
-        }
-        catch (ConnectException e) {
+        } catch (ConnectException e) {
             System.out.println("connection time out");
             proxies.remove(currentProxy);
             switchProxy();
             resultBuffer = new StringBuffer(doGet(url));
+        } catch (java.net.SocketException e) {
+            System.out.println("connection reset");
+            proxies.remove(currentProxy);
+            if (proxies.getSize() > 0) {
+                switchProxy();
+                resultBuffer = new StringBuffer(doGet(url));
+            }
+
         } finally {
             if (reader != null) {
                 reader.close();
@@ -139,18 +146,21 @@ public class HttpHelperUsingProxy implements HttpHelper{
     }
 
     private void switchProxy() {
+
         currentProxy = proxies.getRandom();
         requestCounter = 0;
-        System.out.println("switch proxy to :" + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort() + ";"+"left:"+proxies.getSize());
+        System.out.println("switch proxy to :" + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort() + ";" + "left:" + proxies.getSize());
     }
-    public void saveProxy(){
-        System.out.println("save current proxy: "+currentProxy.getProxyHost()+","+currentProxy.getProxyPort());
+
+    public void saveProxy() {
+        System.out.println("save current proxy: " + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort());
         currentProxy.setActive(true);
         proxies.save(currentProxy);
     }
-    public void setProxy(String host,Integer port){
-        if (null != currentProxy){
-            System.out.println("set proxy to :"+host+","+port);
+
+    public void setProxy(String host, Integer port) {
+        if (null != currentProxy) {
+            System.out.println("set proxy to :" + host + "," + port);
             currentProxy.setProxyHost(host);
             currentProxy.setProxyPort(port);
         }
