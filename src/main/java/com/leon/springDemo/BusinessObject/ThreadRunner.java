@@ -38,7 +38,6 @@ public class ThreadRunner implements Runnable {
         while (lastIndex < maxIndex) {
             stockCode = stockCodes.get(lastIndex).toString();
             System.out.println("Thread: " + threadName + ",stock:" + stockCode + ", " + lastIndex);
-
             sds = realStock.getHistoryDividend(stockCode, realStock.getHistoryDividendString(stockCode));
             if (sds != null) {
                 sds.forEach(d -> {
