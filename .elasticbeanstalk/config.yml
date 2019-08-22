@@ -1,0 +1,21 @@
+branch-defaults:
+  aws-eb:
+    environment: test
+  master:
+    environment: null
+deploy:
+  artifact: target/spingDemo-0.0.1-SNAPSHOT.jar
+global:
+  application_name: stockbackend
+  branch: null
+  default_ec2_keyname: aws-eb
+  default_platform: Java 8
+  default_region: ap-northeast-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: git
+  workspace_type: Application
