@@ -7,9 +7,9 @@ public class StockListReader {
     public static ArrayList ReadFile(String filePath) {
         System.out.println("start read file...");
         ArrayList aStockCodes = new ArrayList<String>();
-
-        try (FileReader fileReader = new FileReader(filePath);
-             BufferedReader bufferedReader = new BufferedReader(fileReader) // 建立一个对象，它把文件内容转成计算机能读懂的语言
+        InputStream is=StockListReader.class.getResourceAsStream(filePath);
+        try (
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is)) // 建立一个对象，它把文件内容转成计算机能读懂的语言
         ) {
             String line;
             int lineIndex = 0;
