@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface StockDividendRepository extends CrudRepository<StockDividend, PkClass> {
 
-    @Query(value = "SELECT * FROM stockdividend  ORDER BY stockId DESC LIMIT 1",nativeQuery = true)
+    @Query(value = "SELECT * FROM stockdividend  where stockId like 'sh%' ORDER BY stockId DESC LIMIT 1",nativeQuery = true)
     StockDividend getLastDividend();
 }

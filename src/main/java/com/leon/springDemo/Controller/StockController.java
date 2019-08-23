@@ -28,7 +28,7 @@ public class StockController {
     private MyProxyRepository proxyRepository;
     private RealStock realStock;
 
-    @RequestMapping("/lastStockDividend")
+    @RequestMapping("/")
     public StockDividend getLastDividend() {
         return stockDivRep.getLastDividend() ;
     }
