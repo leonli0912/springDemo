@@ -16,6 +16,7 @@ import com.leon.springDemo.Repository.StockDividendRepository;
 import com.leon.springDemo.Util.HttpHelper;
 import com.leon.springDemo.Util.HttpHelperUsingProxy;
 import com.leon.springDemo.Util.ProxyPool;
+import com.leon.springDemo.Util.SpringContextUtil;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,46 +46,6 @@ public class StockController {
             runners.get(i).start();
             i++;
         }
-
-        /*ThreadRunner runner1 = new ThreadRunner("runner1",stockCodes.size(),lastIndex,stockCodes);
-        runner1.start();
-
-        ThreadRunner runner2 = new ThreadRunner("runner2",stockCodes.size(),lastIndex+1,stockCodes);
-        runner2.start();
-
-        ThreadRunner runner3 = new ThreadRunner("runner3",stockCodes.size(),lastIndex+2,stockCodes);
-        runner3.start();
-
-        ThreadRunner runner4 = new ThreadRunner("runner4",stockCodes.size(),lastIndex+3,stockCodes);
-        runner4.start();
-
-        ThreadRunner runner5 = new ThreadRunner("runner5",stockCodes.size(),lastIndex+4,stockCodes);
-        runner5.start();
-
-        ThreadRunner runner6 = new ThreadRunner("runner6",stockCodes.size(),lastIndex+5,stockCodes);
-        runner6.start();
-
-        ThreadRunner runner7 = new ThreadRunner("runner7",stockCodes.size(),lastIndex+6,stockCodes);
-        runner7.start();*/
-        /*List<StockDividend> sds = new ArrayList<StockDividend>();
-        String successMsg = "";
-        realStock = new RealStock();
-        String root = realStock.getClass().getResource("/").getPath();
-        ArrayList stockCodes = StockListReader.ReadFile(root+"stockList.txt");
-        int lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
-        //stockDivRep.getLastDividend().getStockId()
-        for(int i=lastIndex+1;i<stockCodes.size();i++){//stockCodes.size()
-            String stockCode = stockCodes.get(i).toString();//stockCodes.get(i).toString();
-            System.out.println("number:..."+i+" stock code: "+stockCode);
-            try{
-                sds = realStock.getHistoryDividend(stockCode,realStock.getHistoryDividendString(stockCode)) ;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            sds.forEach(d->stockDivRep.save(d));
-            successMsg = successMsg + stockCode + "saved !\n";
-        }
-        return successMsg;*/
         return "started";
     }
 
@@ -112,19 +73,29 @@ public class StockController {
         return pool.getProxies();
     }
 
-    @RequestMapping("/testproxy")
-    public String testProxy(){
+    @RequestMapping("/testnodata")
+    public String testND(){
         String res = "";
-        HttpHelper hp = new HttpHelperUsingProxy("GBK", true);
-        ((HttpHelperUsingProxy) hp).setProxy("112.85.166.241",9999);
-        try {
-            res = hp.doGet("https://www.baidu.com/");
-            ((HttpHelperUsingProxy) hp).saveProxy();
-        } catch (java.lang.Exception e){
-            res = "get failed";
+        int lastIndex=0;
+        String stockCode;
+        ArrayList stockCodes = StockListReader.ReadFile("stockList.txt");
+        lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
+        List<StockDividend> sds = new ArrayList<StockDividend>();
+        String successMsg = "";
+
+        while (lastIndex < 3000) {
+            stockCode = stockCodes.get(lastIndex).toString();
+            if (sds != null) {
+                sds.forEach(d -> {
+                            stockDivRep.save(d);
+                        }
+                );
+                lastIndex =stockCodes.indexOf(stockDivRep.getLastDividend().getStockId());
+            }
+            lastIndex++;
+            successMsg = successMsg + stockCode + "saved !\n";
         }
         return  res;
-
     }
 
 }

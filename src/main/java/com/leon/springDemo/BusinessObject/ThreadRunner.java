@@ -32,16 +32,14 @@ public class ThreadRunner implements Runnable {
         stockDivRep = (StockDividendRepository)SpringContextUtil.getBean(StockDividendRepository.class);
         List<StockDividend> sds = new ArrayList<StockDividend>();
         String successMsg = "";
-        //realStock = new RealStock();
         realStock = new RealStock();
 
         while (lastIndex < maxIndex) {
             stockCode = stockCodes.get(lastIndex).toString();
             System.out.println("Thread: " + threadName + ",stock:" + stockCode + ", " + lastIndex);
             sds = realStock.getHistoryDividend(stockCode, realStock.getHistoryDividendString(stockCode));
-            if (sds != null) {
+            if (sds != null & sds.size()>0) {
                 sds.forEach(d -> {
-                            //System.out.println(d);
                             stockDivRep.save(d);
                         }
                 );
