@@ -152,7 +152,8 @@ public class RealStock {
 
     private String getHistoryDividendRaw(String stockCode) throws Exception {
         final String BASEURL = "https://androidinvest.com/Stock/HistoryDividend/";
-        String requestUrl = BASEURL + stockCode;
+        String requestUrl = BASEURL + stockCode.toUpperCase();
+        //String requestUrl = "http://stocktest.ap-northeast-2.elasticbeanstalk.com/";
         String response = null;
         urlHelper.setCharset("UTF-8");
         response = urlHelper.doGet(requestUrl);

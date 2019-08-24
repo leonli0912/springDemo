@@ -67,11 +67,12 @@ public class StockController {
     public List<MyProxy> getProxies(){
         ProxyPool pool = ProxyPool.getInstance();
         List<MyProxy> proxies = pool.getProxies();
-        proxies.forEach(p->{
-            proxyRepository.save(p);
-        });
+        //proxies.forEach(p->{
+        //    proxyRepository.save(p);
+        //});
         return pool.getProxies();
     }
+
 
     @RequestMapping("/testnodata")
     public String testND(){

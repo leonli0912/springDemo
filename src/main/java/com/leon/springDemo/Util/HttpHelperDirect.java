@@ -46,8 +46,8 @@ public class HttpHelperDirect implements HttpHelper {
         //响应失败
         try {
             if (httpURLConnection.getResponseCode() >= 300) {
-                System.out.println("HTTP Request is not success, Response code is " + httpURLConnection.getResponseCode());
-                resultBuffer = new StringBuffer(doGet(url));
+                System.out.println("HTTP Request is not success, Response code is " + httpURLConnection.getResponseCode()+","+url);
+                //resultBuffer = new StringBuffer(doGet(url));
             }
 
             inputStream = httpURLConnection.getInputStream();

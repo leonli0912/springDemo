@@ -26,8 +26,10 @@ public class ProxyPool {
 
         while(page<=5){
             try {
-                String proxyHtml = new HttpHelperDirect("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
-                parseHtml(proxyHtml);
+                //String proxyHtml = new HttpHelperDirect("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
+                //parseHtml("XICI",proxyHtml);
+                String proxyHtml = new HttpHelperDirect("utf-8").doGet("http://www.xiladaili.com/gaoni/"+page);
+                parseHtml("XILA",proxyHtml);
             }catch (Exception e){
                 e.printStackTrace();
                 System.out.print(e);
@@ -36,16 +38,40 @@ public class ProxyPool {
         }
     }
 
-    private void parseHtml(String htmlText) {
+    private void parseHtml(String vendor,String htmlText) {
+        String cssSelector;
         Document document = Jsoup.parse(htmlText);
-        Elements allElements = document.select("#ip_list > tbody>tr") ;
-        for (Element element :allElements){
-            if (element.children().first().tag().toString().equals("th")){
-                continue;
-            }
-            proxies.add(new MyProxy(element.child(1).text(),element.child(2).text())) ;
-            System.out.println("proxy pool add "+ element.child(1).text()+':'+element.child(2).text());
+        Elements allElements;
+
+        switch (vendor){
+            case "XICI":
+                cssSelector = "#ip_list > tbody>tr";
+                allElements = document.select(cssSelector) ;
+                for (Element element :allElements){
+                    if (element.children().first().tag().toString().equals("th")){
+                        continue;
+                    }
+                    proxies.add(new MyProxy(element.child(1).text(),element.child(2).text())) ;
+                    System.out.println("proxy pool add "+ element.child(1).text()+':'+element.child(2).text());
+                }
+                break;
+            case "XILA":
+                cssSelector = ".fl-table>tbody>tr";
+                allElements = document.select(cssSelector) ;
+                for (Element element :allElements){
+                    if (element.children().first().tag().toString().equals("th")){
+                        continue;
+                    }
+                    String[] valueText = element.child(0).text().split(":");
+                    proxies.add(new MyProxy(valueText[0],valueText[1])) ;
+                    System.out.println("proxy pool add "+ valueText[0]+":"+valueText[1]);
+                }
+                break;
+
         }
+
+
+
     }
 
     public ArrayList<MyProxy> getProxies(){

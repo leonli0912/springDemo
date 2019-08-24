@@ -63,6 +63,8 @@ public class HttpHelperUsingProxy implements HttpHelper {
         URLConnection connection = this.openConnection(localURL);
         //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
         //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
+        //Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3602.2 Safari/537.36
+        //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36");
         //"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
         HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
@@ -150,6 +152,7 @@ public class HttpHelperUsingProxy implements HttpHelper {
         currentProxy = proxies.getRandom();
         requestCounter = 0;
         System.out.println("switch proxy to :" + currentProxy.getProxyHost() + "," + currentProxy.getProxyPort() + ";" + "left:" + proxies.getSize());
+        //setProxy("36.91.133.63",8080);
     }
 
     public void saveProxy() {
