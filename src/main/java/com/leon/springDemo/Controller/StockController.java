@@ -51,9 +51,10 @@ public class StockController {
 
     @GetMapping(path = "/allDividend")
     public @ResponseBody
-    Iterable<StockDividend> getAllDividends() {
+    Iterable<StockDividend> getAllDividends(@RequestParam(value="year", required=true) String year ) {
         // This returns a JSON or XML with the users
-        return stockDivRep.findAll();
+        return stockDivRep.filter(year);
+        //return stockDivRep.findAll();
     }
 
     @GetMapping(path = "/addProxy")
@@ -63,9 +64,10 @@ public class StockController {
         return "inited";
     }
 
-    @RequestMapping("/proxies")
-    public List<MyProxy> getProxies(){
+    @RequestMapping("/refreshProxies")
+    public List<MyProxy> refreshProxies(@RequestParam String vendor){
         ProxyPool pool = ProxyPool.getInstance();
+        pool.refresh(vendor);
         List<MyProxy> proxies = pool.getProxies();
         //proxies.forEach(p->{
         //    proxyRepository.save(p);

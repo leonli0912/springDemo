@@ -8,4 +8,7 @@ public interface StockDividendRepository extends CrudRepository<StockDividend, P
 
     @Query(value = "SELECT * FROM stockdividend  where stockId like 'sh%' ORDER BY stockId DESC LIMIT 1",nativeQuery = true)
     StockDividend getLastDividend();
+
+    @Query(value = "SELECT * FROM stockdividend WHERE reportYear = ?1 ORDER BY ratio DESC LIMIT 20",nativeQuery = true)
+    Iterable<StockDividend> filter(String year);
 }

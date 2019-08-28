@@ -2,6 +2,7 @@ package com.leon.springDemo.Util;
 
 import com.leon.springDemo.Entity.MyProxy;
 import com.leon.springDemo.Repository.MyProxyRepository;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,15 +22,30 @@ public class ProxyPool {
     public static ProxyPool getInstance(){
         return instance;
     }
-    private void prepareProxy(){
+    public void refresh(String vendor){
+        prepareProxy(vendor);
+    }
+    private void prepareProxy(String vendor){
+        String vendorUrl = "";
+        switch (vendor){
+            case "XICI":
+                vendorUrl = "https://www.xicidaili.com/nn/";
+                break;
+            case "XILA":
+                vendorUrl = "http://www.xiladaili.com/gaoni/";
+                break;
+            default:
+                vendorUrl = "https://www.xicidaili.com/nn/";
+        }
+
         int page = 1;
 
         while(page<=5){
             try {
                 //String proxyHtml = new HttpHelperDirect("utf-8").doGet("https://www.xicidaili.com/nn/"+page);
                 //parseHtml("XICI",proxyHtml);
-                String proxyHtml = new HttpHelperDirect("utf-8").doGet("http://www.xiladaili.com/gaoni/"+page);
-                parseHtml("XILA",proxyHtml);
+                String proxyHtml = new HttpHelperDirect("utf-8").doGet(vendorUrl+page);
+                parseHtml(vendor,proxyHtml);
             }catch (Exception e){
                 e.printStackTrace();
                 System.out.print(e);
@@ -37,7 +53,9 @@ public class ProxyPool {
             page++;
         }
     }
-
+    private void prepareProxy(){
+        prepareProxy("XICI");
+    }
     private void parseHtml(String vendor,String htmlText) {
         String cssSelector;
         Document document = Jsoup.parse(htmlText);
